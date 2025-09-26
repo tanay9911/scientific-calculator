@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from calculator import square_root, factorial, natural_log, power
+from app.calculator import square_root, factorial, natural_log, power
 import os
 
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../templates'))
