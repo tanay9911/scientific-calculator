@@ -1,30 +1,57 @@
 pipeline {
     agent any
+
+    environment {
+        DOCKER_IMAGE = "tanay9911/scientific-calculator:latest"
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/tanay9911/scientific-calculator.git'
+                // Use credentialsId for GitHub PAT
+                git branch: 'main', 
+                    url: 'https://github.com/tanay9911/scientific-calculator.git', 
+                    credentialsId: 'GitHub_PAT_for_Jenkins'
             }
         }
-        stage('Build') {
+
+        stage('Build / Install Dependencies') {
             steps {
+                echo "Installing Python dependencies..."
+                sh 'python3 -m pip install --upgrade pip'
                 sh 'pip install -r requirements.txt'
             }
         }
-        stage('Test') {
+
+        stage('Run Tests') {
             steps {
-                sh 'python -m unittest discover tests'
+                echo "Running unit tests..."
+                sh 'python3 -m unittest discover tests'
             }
         }
+
         stage('Docker Build') {
             steps {
-                sh 'docker build -t tanay9911/scientific-calculator:latest .'
+                echo "Building Docker image..."
+                sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
+
         stage('Docker Push') {
             steps {
-                sh 'docker push tanay9911/scientific-calculator:latest'
+                echo "Pushing Docker image to Docker Hub..."
+                
+                sh "docker push ${DOCKER_IMAGE}"
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
