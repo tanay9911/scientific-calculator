@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scientific Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        button { padding: 15px 30px; margin: 10px; font-size: 18px; cursor: pointer; }
+        .inputs { margin-top: 30px; }
+        input { padding: 10px; font-size: 16px; margin: 5px; width: 220px; }
+        .result { margin-top: 25px; font-size: 20px; color: #e74c3c; font-weight: bold; }
+        .operation-buttons { margin-bottom: 20px; }
+        .operation-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Scientific Calculator</h1>
+
+    <form method="POST" class="inputs">
+        <!-- Square Root -->
+        <div class="operation-section">
+            <h3>Square Root (√x)</h3>
+            <input type="text" name="x_sqrt" placeholder="Enter number for √x" value="{{ x_sqrt }}">
+            <button type="submit" name="operation" value="sqrt">Calculate √x</button>
+        </div>
+
+        <!-- Factorial -->
+        <div class="operation-section">
+            <h3>Factorial (x!)</h3>
+            <input type="text" name="x_fact" placeholder="Enter integer for x!" value="{{ x_fact }}">
+            <button type="submit" name="operation" value="fact">Calculate x!</button>
+        </div>
+
+        <!-- Natural Logarithm -->
+        <div class="operation-section">
+            <h3>Natural Logarithm (ln(x))</h3>
+            <input type="text" name="x_ln" placeholder="Enter number for ln(x)" value="{{ x_ln }}">
+            <button type="submit" name="operation" value="ln">Calculate ln(x)</button>
+        </div>
+
+        <!-- Power Function -->
+        <div class="operation-section">
+            <h3>Power Function (x^y)</h3>
+            <input type="text" name="x_pow" placeholder="Enter base x" value="{{ x_pow }}">
+            <input type="text" name="y_pow" placeholder="Enter exponent y" value="{{ y_pow }}">
+            <button type="submit" name="operation" value="pow">Calculate x^y</button>
+        </div>
+    </form>
+
+    {% if result %}
+    <div class="result">{{ result }}</div>
+    {% endif %}
+</body>
+</html>
