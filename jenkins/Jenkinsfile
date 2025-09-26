@@ -26,21 +26,21 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo "Running unit tests..."
-                sh 'python3 -m unittest discover tests'
+                sh 'python3 -m unittest discover -s tests'
             }
         }
 
         stage('Docker Build') {
             steps {
                 echo "Building Docker image..."
-                sh "docker build -t ${DOCKER_IMAGE} ."
+                // Specify Dockerfile path explicitly
+                sh "docker build -t ${DOCKER_IMAGE} -f docker/Dockerfile ."
             }
         }
 
         stage('Docker Push') {
             steps {
                 echo "Pushing Docker image to Docker Hub..."
-                
                 sh "docker push ${DOCKER_IMAGE}"
             }
         }
