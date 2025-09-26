@@ -1,0 +1,16 @@
+- hosts: localhost
+  tasks:
+    - name: Pull Docker image
+      community.docker.docker_image:
+        name: tanay9911/scientific-calculator
+        source: pull
+
+    - name: Run Docker container
+      community.docker.docker_container:
+        name: scientific_calculator
+        image: tanay9911/scientific-calculator:latest
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "5000:5000"
+
