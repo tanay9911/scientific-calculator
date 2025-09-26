@@ -16,4 +16,4 @@ COPY templates/ ./templates
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["python", "app/app.py"]
+CMD ["python", "-m", "app.app"]

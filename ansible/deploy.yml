@@ -1,16 +1,29 @@
-- hosts: localhost
+---
+- name: Deploy Scientific Calculator
+  hosts: local
+  become: false
+  vars:
+    docker_image: "tanay9911/scientific-calculator:latest"
+    container_name: "scientific_calculator"
+    flask_port: 5000
+
   tasks:
     - name: Pull Docker image
       community.docker.docker_image:
-        name: tanay9911/scientific-calculator
+        name: "{{ docker_image }}"
         source: pull
+
+    - name: Remove existing container if exists
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: true
 
     - name: Run Docker container
       community.docker.docker_container:
-        name: scientific_calculator
-        image: tanay9911/scientific-calculator:latest
+        name: "{{ container_name }}"
+        image: "{{ docker_image }}"
         state: started
-        restart_policy: unless-stopped
-        ports:
-          - "5000:5000"
-
+        restart_policy: always
+        published_ports:
+          - "{{ flask_port }}:5000"
