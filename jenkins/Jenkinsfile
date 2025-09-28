@@ -49,22 +49,21 @@ pipeline {
                 sh 'ansible-playbook -i ansible/hosts.ini ansible/deploy.yml'
             }
         }
+    }
 
-        stage('Send Notification Email') {
-            steps {
-                script {
-                    echo "Sending notification email..."
-                    // Determine result
-                    def status = currentBuild.currentResult
-                    def subject = "Build Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${status}"
-                    def body = "Job '${env.JOB_NAME}' (${env.BUILD_URL}) has finished.\nStatus: ${status}"
-                    
-                    // Send mail using basic Email Notification plugin
-                    mail to: 'taxay2234@gmail.com',
-                         subject: subject,
-                         body: body
-                }
-            }
+    post {
+        always {
+            echo "Sending notification email..."
+            def status = currentBuild.currentResult
+            def subject = "Build Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${status}"
+            def body = "Job '${env.JOB_NAME}' (${env.BUILD_URL}) has finished.\nStatus: ${status}"
+
+            // Send mail using basic Email Notification plugin
+            mail to: 'taxay2234@gmail.com',
+                 subject: subject,
+                 body: body
         }
+        success { echo "Build succeeded!" }
+        failure { echo "Build failed!" }
     }
 }
