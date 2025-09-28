@@ -1,4 +1,4 @@
-\pipeline {
+pipeline {
     agent any
 
     environment {
@@ -8,8 +8,8 @@
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', 
-                    url: 'https://github.com/tanay9911/scientific-calculator.git', 
+                git branch: 'main',
+                    url: 'https://github.com/tanay9911/scientific-calculator.git',
                     credentialsId: 'GitHub_PAT_for_Jenkins'
             }
         }
@@ -18,7 +18,7 @@
             steps {
                 echo "Installing Python dependencies..."
                 sh 'python3 -m pip install --upgrade pip'
-                sh 'pip install -r requirements.txt' 
+                sh 'pip install -r requirements.txt'
             }
         }
 
@@ -54,11 +54,15 @@
             steps {
                 script {
                     echo "Sending notification email..."
-                    mail(
-                        to: 'tabay2234@gmail.com',
-                        subject: "Build Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: "Job '${env.JOB_NAME}' (${env.BUILD_URL}) has finished.\nStatus: ${currentBuild.currentResult}"
-                    )
+                    // Determine result
+                    def status = currentBuild.currentResult
+                    def subject = "Build Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${status}"
+                    def body = "Job '${env.JOB_NAME}' (${env.BUILD_URL}) has finished.\nStatus: ${status}"
+                    
+                    // Send mail using basic Email Notification plugin
+                    mail to: 'taxay2234@gmail.com',
+                         subject: subject,
+                         body: body
                 }
             }
         }
