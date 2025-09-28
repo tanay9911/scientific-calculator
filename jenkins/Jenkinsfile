@@ -52,7 +52,23 @@ pipeline {
     }
 
     post {
-        success { echo 'Pipeline completed successfully!' }
-        failure { echo 'Pipeline failed!' }
+        success { 
+            echo 'Pipeline completed successfully!'
+            emailext (
+                subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Job '${env.JOB_NAME}' (${env.BUILD_URL}) completed successfully.",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+                to: 'tabay2234@gmail.com'  // <--- replace with your email
+            )
+        }
+        failure { 
+            echo 'Pipeline failed!'
+            emailext (
+                subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Job '${env.JOB_NAME}' (${env.BUILD_URL}) failed. Check console output for details.",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+                to: 'tabay2234@gmail.com'  // <--- replace with your email
+            )
+        }
     }
 }
