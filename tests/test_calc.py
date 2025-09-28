@@ -3,8 +3,8 @@ from app.calculator import square_root, factorial, natural_log, power
 import math
 
 class TestCalculator(unittest.TestCase):
-    def test_fail_build(self):
-        self.assertTrue(False)  # adding this to test build failure
+    #def test_fail_build(self): uncomment this if you want to test failure notification
+    #    self.assertTrue(False)  # adding this to test build failure
 
 
     def test_square_root(self):
