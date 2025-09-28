@@ -18,7 +18,7 @@ pipeline {
             steps {
                 echo "Installing Python dependencies..."
                 sh 'python3 -m pip install --upgrade pip'
-                sh 'pip install -r requirements.txt' 
+                sh 'pip install -r requirements.txt'
             }
         }
 
@@ -49,24 +49,21 @@ pipeline {
                 sh 'ansible-playbook -i ansible/hosts.ini ansible/deploy.yml'
             }
         }
-    }
 
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-            emailext(
-                subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Job '${env.JOB_NAME}' (${env.BUILD_URL}) completed successfully.",
-                to: 'tabay2234@gmail.com'
-            )
-        }
-        failure {
-            echo 'Pipeline failed!'
-            emailext(
-                subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Job '${env.JOB_NAME}' (${env.BUILD_URL}) failed. Check console output for details.",
-                to: 'tabay2234@gmail.com'
-            )
+        stage('Send Notification Email') {
+            steps {
+                script {
+                    // This ensures the email stage runs even if previous stages fail
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        echo "Sending notification email..."
+                        emailext(
+                            subject: "Build Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                            body: "Job '${env.JOB_NAME}' (${env.BUILD_URL}) has finished.\nStatus: ${currentBuild.currentResult}",
+                            to: 'tabay2234@gmail.com'
+                        )
+                    }
+                }
+            }
         }
     }
 }
