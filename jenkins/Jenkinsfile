@@ -53,17 +53,23 @@ pipeline {
 
     post {
         always {
-            echo "Sending notification email..."
-            def status = currentBuild.currentResult
-            def subject = "Build Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${status}"
-            def body = "Job '${env.JOB_NAME}' (${env.BUILD_URL}) has finished.\nStatus: ${status}"
+            script {
+                echo "Sending notification email..."
+                def status = currentBuild.currentResult
+                def subject = "Build Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${status}"
+                def body = "Job '${env.JOB_NAME}' (${env.BUILD_URL}) has finished.\nStatus: ${status}"
 
-            // Send mail using basic Email Notification plugin
-            mail to: 'taxay2234@gmail.com',
-                 subject: subject,
-                 body: body
+                // Send mail using basic Email Notification plugin
+                mail to: 'taxay2234@gmail.com',
+                     subject: subject,
+                     body: body
+            }
         }
-        success { echo "Build succeeded!" }
-        failure { echo "Build failed!" }
+        success {
+            echo "Build succeeded!"
+        }
+        failure {
+            echo "Build failed!"
+        }
     }
 }
